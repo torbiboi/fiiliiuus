@@ -1,3 +1,7 @@
+# Ein Discord Bot, bei dem jeder aus dem Info LK etwas hinzufügen kann
+
+# momentan einfache Textcommands und ein Voice Channel Command
+
 import discord  # installiere mit "python3 -m pip install -U discord.py" (MacOs/Linux) oder "py -3 -m pip install -U discord.py" (Windows)
 import random
 import asyncio
