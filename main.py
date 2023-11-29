@@ -12,51 +12,21 @@ from os import listdir
 from os.path import isfile, join
 import os
 from matheAufgaben import createTask    # erstellt Aufgaben für das Kopfrechenspiel
-
+from commands import rnd_list, commandDescriptions
 
 intents = discord.Intents.default()     
 intents.message_content = True
 client = discord.Client(intents=intents)    # standardmäßige Berechtigungen, um Nachrichten zu senden
 
-with open("token.txt", "r", encoding="utf-8") as hfile:     # Sicherstellen, dass eine Datei names token.txt angelegt wird, in der ein Discord Token liegt. (nicht im Projekt enthalten)
+with open("token.txt", "r", encoding="utf-8") as hfile:
     token=hfile.read()
+    if token.startswith("Hier deinen Token reinpacken!"):
+        token = input("Kopiere hier deinen Discord Bot Token hin und drücke Enter oder noch besser, schreibe ihn in 'token.txt', um ihn beim nächsten Mal automatisch zu laden! (Wenn du noch keinen Discord Bot Token hast, solltest du im Discord Developer Portal eine neue Bot-Applikation erstellen.) Dein Token hier: ")
 
-
-# einfache Befehle, die alle auf die gleiche Weise funktionieren:
-# Nach einer bestimmten Nachricht wird eine zufällige Nachricht aus einer Liste versendet.
-# Um einen neuen Befehlt hinzuzufügen einfach den Befehlsnamen mit Prefix als Schlüssel und als value
-# eine Liste von möglichen Antworten zum Dictionary hinzufügen. also z.B.
-# "f!command":["antwort1", "antwort2", "antwort3"],
-rnd_list = {
-    "f!hallo":[     # einfacher Testcommand
-               "Sei gegrüßt!",
-               "Guten Tag!",
-               "Hallo, du!"],
-    "f!orakel":[    #einfacher Testcommand 2
-                "Ja",
-                "Nein",
-                "Wahrscheinlich",
-                "Vielleicht",
-                "Wahrscheinlich nicht",
-                "Definitiv",
-                "absolut nicht"]
-}
 
 list_keys = rnd_list.keys()     # Liste der obrigen Befehle
 
-
-# zugehörige Beschreibungen der Befehle. Die erste ist für den f!help Befehl,
-# die zweite für einen noch nicht eingeführten, ausführlicheren Hilfebefehl.
-commandDescriptions = {
-    "f!hallo":["Simpler Testcommand", "Ein einfacher Command, auf den der Bot einen zufälligen Gruß antowrtet."],
-    "f!orakel":["Fiiliiuus Profet", "Beantwortet jegliche Ja/Nein Fragen, die du hast."],
-    "f!calc":["Kopfrechenspiel", "Lege dich mit deinen freunden in einem spannenden Kopfrechenduell an!"],
-    "f!binary counting channel":["In einem Channel binär zählen", "In einem Channel binär zählen"],
-    "f!ranton":["...finde es raus", "Spielt die legendäre Audio in einem VC ab."]
-}
-
 games = {}  # für das Kopfrechenspiel
-
 
 countingChannels = [int(f) for f in listdir("binarycount/") if isfile(join("binarycount/", f))]     # channels, in denen binär gezählt wird.
 
@@ -252,6 +222,13 @@ async def on_message(message):
         for i in list(commandDescriptions.keys()):
             embed.add_field(name=i, value=commandDescriptions[i][0], inline=True)
         await message.channel.send(embed=embed)
+    
+    if msg.startswith("f!help "):
+        command = msg.split("f!help ", 1)[1]
+        if command in list(commandDescriptions.keys()):
+            embed = discord.Embed(title=command, description=commandDescriptions[command][1], color=0xc853e6)
+            await message.channel.send(embed=embed)
+        return
 
     # iteriert durch alle rnd_list commands und sendet eine zufällige Antwort bei Bedarf:
     for command in list_keys:
