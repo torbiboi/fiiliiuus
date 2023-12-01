@@ -8,4 +8,4 @@ Der Bot ist mithilfe der discord.py Python Bibliothek umgesetzt, spezifischer mi
 Dupliziere die `.env.example` Datei und benenne sie in `.env` um und füge deinen Token ein.
 
 ## Paketinstallation
-Alle benötigten Pakete in den entsprechenden Versionen könne mit `python3 -m pip install -r requirements.txt installiert werden.
+Alle benötigten Pakete in den entsprechenden Versionen könne mit `python3 -m pip install -r requirements.txt` installiert werden.
